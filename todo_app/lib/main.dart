@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:todo_app/add_task_page.dart';
 
 void main() {
   runApp(const Todo());
@@ -39,14 +40,52 @@ class _RootPageState extends State<RootPage> {
         backgroundColor: Colors.grey[850],
       ),
       body: SingleChildScrollView(
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Text(
-              'HI (NAME)!',
-              style: TextStyle(color: Colors.white),
-            )
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            //container for the greeting
+            Container(
+              alignment: Alignment.center,
+              // color: Colors.red,
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 10),
+              child: const Text(
+                'Hi (name)',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "Lato",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50),
+              ),
+            ),
+
+            //container for the statement
+            Container(
+              alignment: Alignment.center,
+              // color: Colors.yellow,
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: const Text(
+                "Here are your Todo's for today:",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
+            ),
+
+            //container for input box
+            Container(
+                alignment: Alignment.bottomCenter,
+                padding: const EdgeInsets.all(20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return const AddTaskPage();
+                    }));
+                  },
+                  child: const Text("+ Add Task"),
+                )),
           ],
         ),
       ),
@@ -60,7 +99,7 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Drawer(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[400],
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
