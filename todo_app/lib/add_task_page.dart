@@ -95,12 +95,42 @@ class _AddTaskPageState extends State<AddTaskPage> {
             ),
           ),
         ),
-        Center(
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text('Add Task'),
+        Row(children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(23, 10, 20, 10),
+              child: SizedBox(
+                width: 180,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 91, 228, 95)),
+                  child: const Text(
+                    'Add Task',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ),
+              ),
+            ),
           ),
-        )
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 23, 10),
+            child: SizedBox(
+              width: 110,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 236, 61, 17)),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ),
+          ),
+        ]),
       ]),
     );
   }

@@ -84,7 +84,10 @@ class _RootPageState extends State<RootPage> {
                       return const AddTaskPage();
                     }));
                   },
-                  child: const Text("+ Add Task"),
+                  child: const Text(
+                    "+ Add Task",
+                    style: TextStyle(fontFamily: "Lato"),
+                  ),
                 )),
           ],
         ),
