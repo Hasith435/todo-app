@@ -79,7 +79,7 @@ flutter:
       fonts:
         # - asset: fonts/Lato-Bold.ttf
         # - asset: fonts/Lato-Light.ttf
-        # - asset: D:\flutter_projects\todo-app\todo-app\fonts\Lato-Regular.ttf
+        - asset: D:\flutter_projects\todo-app\todo-app\fonts\Lato-Regular.ttf
         
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
