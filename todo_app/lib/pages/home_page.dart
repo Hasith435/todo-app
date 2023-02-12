@@ -15,9 +15,9 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         backgroundColor: Colors.grey,
         child: ListView(
-          children: const [
+          children: [
             //put the account name and all the details here
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.black54),
               child: Text(
                 "drawer header",
@@ -25,14 +25,49 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            //first list tile
-            ListTile(
-              leading: Icon(Icons.today),
-              title: Text(
-                'Today',
-                style: TextStyle(fontSize: 17),
+            //today button
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.today),
+                label: const Text("Today"),
               ),
-            )
+            ),
+
+            //tommorrow button
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.turn_right),
+                label: const Text("Tommorow"),
+              ),
+            ),
+
+            //weekly button
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.calendar_view_week),
+                label: const Text("Weekly"),
+              ),
+            ),
+
+            //important button
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.label_important),
+                label: const Text("Important"),
+              ),
+            ),
           ],
         ),
       ),
@@ -76,7 +111,11 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          const ToDoList(),
+          ToDoList(
+            taskName: "Code app",
+            taskCompleted: true,
+            onChanged: (p0) {},
+          ),
         ],
       ),
     );
