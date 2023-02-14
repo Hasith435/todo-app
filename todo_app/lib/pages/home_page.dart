@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/todo_list_container.dart';
 
 import '../utils/dialog_box.dart';
@@ -32,7 +33,11 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
-  void delTask() {}
+  void delTask(int index) {
+    setState(() {
+      toDoListObjects.removeAt(index);
+    });
+  }
 
   void createNewTask() {
     showDialog(
@@ -104,6 +109,22 @@ class _HomePageState extends State<HomePage> {
                   label: const Text("Important"),
                 ),
               ),
+
+              //completed button
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return const CompletedTasks();
+                    }));
+                  },
+                  icon: const Icon(Icons.check),
+                  label: const Text("Completed"),
+                ),
+              ),
             ],
           ),
         ),
@@ -158,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                   taskName: toDoListObjects[index][0],
                   taskCompleted: toDoListObjects[index][1],
                   onChanged: (value) => checkBoxChanged(value, index),
-                  onDel: delTask,
+                  onDel: (context) => delTask(index),
                 );
               },
             ),
