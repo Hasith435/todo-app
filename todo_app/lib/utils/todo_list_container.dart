@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ToDoList extends StatelessWidget {
   final String taskName;
   final bool taskCompleted;
-  VoidCallback onDel;
+  Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
 
   ToDoList(
@@ -17,34 +18,42 @@ class ToDoList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16), color: Colors.grey[600]),
-          child: Row(
+        child: Slidable(
+          endActionPane: ActionPane(
+            motion: const StretchMotion(),
             children: [
-              Checkbox(
-                value: taskCompleted,
-                onChanged: onChanged,
-              ),
-              Text(
-                taskName,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    decoration: taskCompleted
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                    decorationColor: Colors.black,
-                    decorationThickness: 2),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.delete),
-                color: Colors.white,
+              SlidableAction(
+                onPressed: onDel,
+                icon: Icons.delete,
+                backgroundColor: Colors.red.shade300,
+                borderRadius: BorderRadius.circular(12),
               )
             ],
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[600]),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: taskCompleted,
+                  onChanged: onChanged,
+                ),
+                Text(
+                  taskName,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      decoration: taskCompleted
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                      decorationColor: Colors.black,
+                      decorationThickness: 2),
+                ),
+              ],
+            ),
           ),
         ));
   }
