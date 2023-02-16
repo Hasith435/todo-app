@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class ToDoList extends StatelessWidget {
   final String taskName;
   final bool taskCompleted;
+  final String priority;
   Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
 
@@ -12,6 +13,7 @@ class ToDoList extends StatelessWidget {
       {super.key,
       required this.taskName,
       required this.taskCompleted,
+      required this.priority,
       required this.onDel,
       required this.onChanged});
 
@@ -46,7 +48,21 @@ class ToDoList extends StatelessWidget {
                   taskName,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 20,
+                  ),
+                ),
+
+                const Spacer(),
+                //text for the todo priority
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    "Priority: $priority",
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ],
