@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+//this is the todolist container for the today page
 class ToDoList extends StatelessWidget {
   final String taskName;
   final bool taskCompleted;
@@ -43,18 +44,44 @@ class ToDoList extends StatelessWidget {
                 ),
                 Text(
                   taskName,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      decoration: taskCompleted
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                      decorationColor: Colors.black,
-                      decorationThickness: 2),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
               ],
             ),
           ),
         ));
+  }
+}
+
+//this is the todolist container for the completed page
+class ToDoListCompleted extends StatelessWidget {
+  final String taskName;
+
+  const ToDoListCompleted({super.key, required this.taskName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16), color: Colors.grey[600]),
+        child: Row(
+          children: [
+            Text(
+              taskName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
