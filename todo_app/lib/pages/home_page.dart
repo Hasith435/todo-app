@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/todo_list_container.dart';
+import 'package:todo_app/pages/completed_tasks.dart';
 
 import '../utils/dialog_box.dart';
+
+List completedTodos = [];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +22,10 @@ class _HomePageState extends State<HomePage> {
   void checkBoxChanged(bool? value, index) {
     setState(() {
       toDoListObjects[index][1] = !toDoListObjects[index][1];
+
+      //adding the completed task into completed tasks list
+      completedTodos.add(toDoListObjects[index]);
+      toDoListObjects.removeAt(index);
     });
   }
 
@@ -66,6 +73,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
+              //all todos button
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.tornado),
+                  label: const Text("All Todos"),
+                ),
+              ),
+
               //today button
               Padding(
                 padding:
@@ -107,6 +125,17 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {},
                   icon: const Icon(Icons.label_important),
                   label: const Text("Important"),
+                ),
+              ),
+
+              //priority view button
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.priority_high),
+                  label: const Text("Priority View"),
                 ),
               ),
 
@@ -164,7 +193,7 @@ class _HomePageState extends State<HomePage> {
             const Align(
               alignment: Alignment.center,
               child: Text(
-                "Here are your todos for Today:",
+                "Here are your todos:",
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
