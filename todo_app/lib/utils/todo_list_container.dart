@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/utils/dialog_box.dart';
+import 'package:todo_app/utils/dialog_box_todo_description.dart';
 
 //this is the todolist container for the today page
 class ToDoList extends StatelessWidget {
   final String taskName;
   final bool taskCompleted;
   final String priority;
+  final String description;
   Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
 
@@ -14,6 +17,7 @@ class ToDoList extends StatelessWidget {
       required this.taskName,
       required this.taskCompleted,
       required this.priority,
+      required this.description,
       required this.onDel,
       required this.onChanged});
 
@@ -33,40 +37,64 @@ class ToDoList extends StatelessWidget {
               )
             ],
           ),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.grey[600]),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: taskCompleted,
-                  onChanged: onChanged,
-                ),
-                Text(
-                  taskName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+          child: InkWell(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.grey[600]),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: taskCompleted,
+                    onChanged: onChanged,
                   ),
-                ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        taskName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        formattedDateTime,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
 
-                const Spacer(),
-                //text for the todo priority
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: Text(
-                    "Priority: $priority",
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                  const Spacer(),
+                  //text for the todo priority
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      "Priority: $priority",
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return DescriptionDialog(
+                      taskName: taskName,
+                      priority: priority,
+                      dueDate: formattedDateTime,
+                      description: description,
+                    );
+                  });
+            },
           ),
         ));
   }

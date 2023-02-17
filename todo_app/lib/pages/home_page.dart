@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _controller = TextEditingController();
+  final _controllerDescription = TextEditingController();
 
   List toDoListObjects = [];
   bool displayTodosCompletedMsg = false;
@@ -41,8 +42,10 @@ class _HomePageState extends State<HomePage> {
   void saveNewTask() {
     setState(() {
       toDoListObjects.add(
-        [_controller.text, selectedValue, false],
+        [_controller.text, selectedValue, false, _controllerDescription.text],
       );
+
+      showDate = false;
     });
 
     _controller.clear();
@@ -61,6 +64,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context) {
           return DialogBox(
             controller: _controller,
+            controlletDescrition: _controllerDescription,
             onSave: saveNewTask,
           );
         });
@@ -212,6 +216,7 @@ class _HomePageState extends State<HomePage> {
                   taskName: toDoListObjects[index][0],
                   priority: toDoListObjects[index][1],
                   taskCompleted: toDoListObjects[index][2],
+                  description: toDoListObjects[index][3],
                   onChanged: (value) => checkBoxChanged(value, index),
                   onDel: (context) => delTask(index),
                 );
