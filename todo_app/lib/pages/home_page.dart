@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
+import 'package:todo_app/pages/priority_view.dart';
 import 'package:todo_app/utils/todo_list_container.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/dialog_box.dart';
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     _controller.clear();
+    _controllerDescription.clear();
     Navigator.of(context).pop();
   }
 
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: Drawer(
-          backgroundColor: Colors.grey,
+          backgroundColor: Colors.grey.shade700,
           child: ListView(
             children: [
               //put the account name and all the details here
@@ -139,7 +141,12 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return const PriorityView();
+                    }));
+                  },
                   icon: const Icon(Icons.priority_high),
                   label: const Text("Priority View"),
                 ),
@@ -163,13 +170,13 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 88, 88, 88),
+        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
         appBar: AppBar(
           title: const Text(
             'To-Do',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.grey[800],
+          backgroundColor: Colors.grey[900],
           elevation: 0,
         ),
         floatingActionButton: FloatingActionButton(

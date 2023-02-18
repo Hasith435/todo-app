@@ -26,7 +26,7 @@ class DialogBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) => AlertDialog(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.grey.shade800,
         content: SizedBox(
           height: 320,
           width: 100,
@@ -36,13 +36,14 @@ class DialogBox extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: TextFormField(
+                  cursorColor: Colors.white,
                   controller: controller,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       hintText: "Enter task name",
                       filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
+                      fillColor: Colors.grey.shade800,
+                      hintStyle: const TextStyle(color: Colors.white)),
                 ),
               ),
 
@@ -53,13 +54,13 @@ class DialogBox extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: DropdownButtonFormField2(
                       decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                        filled: true,
+                        fillColor: Colors.grey.shade800,
+                      ),
                       isExpanded: true,
-                      dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)),
+                      dropdownDecoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.zero, bottom: Radius.circular(20))),
                       value: selectedValue,
                       onChanged: (value) {
                         setState(() {
@@ -72,12 +73,14 @@ class DialogBox extends StatelessWidget {
                                 child: Text(
                                   item,
                                   style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
+                                      fontSize: 14, color: Colors.black),
                                 ),
                               ))
                           .toList(),
-                      hint: const Text("Choose todo priority"),
+                      hint: const Text(
+                        "Choose todo priority",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     )),
               ),
 
@@ -85,14 +88,13 @@ class DialogBox extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: TextFormField(
+                  style: const TextStyle(color: Colors.white),
                   controller: controlletDescrition,
                   decoration: InputDecoration(
                       hintText: "Enter task description",
                       filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      )),
+                      fillColor: Colors.grey.shade800,
+                      hintStyle: const TextStyle(color: Colors.white)),
                 ),
               ),
 
