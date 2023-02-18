@@ -17,7 +17,7 @@ class DescriptionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulBuilder(
         builder: (BuildContext context, setState) => AlertDialog(
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.grey.shade800,
               content: SizedBox(
                 height: 200,
                 child: Column(

@@ -14,13 +14,13 @@ class _CompletedTasksState extends State<CompletedTasks> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 88, 88, 88),
+      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       appBar: AppBar(
         title: const Text(
           "Completed tasks",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Colors.grey[900],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
