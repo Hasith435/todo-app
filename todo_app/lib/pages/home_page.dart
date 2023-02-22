@@ -6,9 +6,15 @@ import 'package:todo_app/pages/priority_view.dart';
 import 'package:todo_app/utils/todo_list_container.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/dialog_box.dart';
+import 'package:todo_app/pages/login_page.dart';
 
 List completedTodos = [];
 bool taskCheck = true;
+List toDoListObjects = [];
+
+List highPriority = [];
+List mediumPriority = [];
+List lowPriority = [];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   final _controller = TextEditingController();
   final _controllerDescription = TextEditingController();
 
-  List toDoListObjects = [];
   bool displayTodosCompletedMsg = false;
 
   void checkBoxChanged(bool? value, index) {
@@ -46,6 +51,35 @@ class _HomePageState extends State<HomePage> {
         [_controller.text, selectedValue, false, _controllerDescription.text],
       );
 
+      //high priority tasks
+      if (selectedValue == "High") {
+        highPriority.add([
+          _controller.text,
+          selectedValue,
+          false,
+          _controllerDescription.text
+        ]);
+      }
+
+      //Medium priority
+      if (selectedValue == "Medium") {
+        mediumPriority.add([
+          _controller.text,
+          selectedValue,
+          false,
+          _controllerDescription.text
+        ]);
+      }
+
+      if (selectedValue == "Low") {
+        lowPriority.add([
+          _controller.text,
+          selectedValue,
+          false,
+          _controllerDescription.text
+        ]);
+      }
+
       showDate = false;
     });
 
@@ -57,6 +91,9 @@ class _HomePageState extends State<HomePage> {
   void delTask(int index) {
     setState(() {
       toDoListObjects.removeAt(index);
+      highPriority.removeAt(index);
+      mediumPriority.removeAt(index);
+      lowPriority.removeAt(index);
     });
   }
 
@@ -190,13 +227,13 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 50),
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Hi (name)!",
-                  style: TextStyle(
+                  "Hi $userName!",
+                  style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
