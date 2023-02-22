@@ -57,7 +57,6 @@ class DialogBox extends StatelessWidget {
                         filled: true,
                         fillColor: Colors.grey.shade800,
                       ),
-                      isExpanded: true,
                       dropdownDecoration: const BoxDecoration(
                           borderRadius: BorderRadius.vertical(
                               top: Radius.zero, bottom: Radius.circular(20))),
@@ -67,6 +66,7 @@ class DialogBox extends StatelessWidget {
                           selectedValue = value as String;
                         });
                       },
+                      isExpanded: false,
                       items: priorities
                           .map((item) => DropdownMenuItem<String>(
                                 value: item,
@@ -77,9 +77,12 @@ class DialogBox extends StatelessWidget {
                                 ),
                               ))
                           .toList(),
-                      hint: const Text(
-                        "Choose todo priority",
-                        style: TextStyle(color: Colors.white),
+                      hint: const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Choose todo priority",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     )),
               ),
