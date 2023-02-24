@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/pages/priority_view.dart';
@@ -7,6 +8,7 @@ import 'package:todo_app/utils/todo_list_container.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/dialog_box.dart';
 import 'package:todo_app/pages/login_page.dart';
+import 'package:todo_app/utils/task_sort.dart';
 
 List completedTodos = [];
 bool taskCheck = true;
@@ -15,6 +17,10 @@ List toDoListObjects = [];
 List highPriority = [];
 List mediumPriority = [];
 List lowPriority = [];
+
+List dateSortVariables = ["Today", "Tommorow", "Specific date"];
+
+List priorities = ["High", "Medium", "Low"];
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,8 +32,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _controller = TextEditingController();
   final _controllerDescription = TextEditingController();
+  final _titleSortController = TextEditingController();
 
   bool displayTodosCompletedMsg = false;
+  bool showSortBox = true;
 
   void checkBoxChanged(bool? value, index) {
     setState(() {
@@ -109,180 +117,165 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  //check if the sort box is required
+  void checkSortBox() {
+    if (toDoListObjects.isEmpty) {
+      showSortBox == false;
+    } else {
+      showSortBox == true;
+    }
+  }
+
+  void showAllTasks() {}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: Drawer(
-          backgroundColor: Colors.grey.shade700,
-          child: ListView(
+    return SafeArea(
+      child: Scaffold(
+          drawer: Drawer(
+            backgroundColor: Colors.grey.shade700,
+            child: ListView(
+              children: [
+                //put the account name and all the details here
+                const DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.black54),
+                  child: Text(
+                    "drawer header",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                //all todos button
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const HomePage();
+                      }));
+                    },
+                    icon: const Icon(Icons.tornado),
+                    label: const Text("All Todos"),
+                  ),
+                ),
+
+                //weekly button
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.calendar_view_week),
+                    label: const Text("Weekly"),
+                  ),
+                ),
+
+                //completed button
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const CompletedTasks();
+                      }));
+                    },
+                    icon: const Icon(Icons.check),
+                    label: const Text("Completed"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+          appBar: AppBar(
+            title: const Text(
+              'To-Do',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.grey[900],
+            elevation: 0,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: createNewTask,
+            splashColor: Colors.black,
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //put the account name and all the details here
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.black54),
-                child: Text(
-                  "drawer header",
-                  style: TextStyle(color: Colors.white),
+              Padding(
+                padding: const EdgeInsets.only(top: 50, bottom: 12),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Hi $userName!",
+                    style: const TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
               ),
 
-              //all todos button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const HomePage();
-                    }));
-                  },
-                  icon: const Icon(Icons.tornado),
-                  label: const Text("All Todos"),
-                ),
-              ),
+              //sortbox
+              if (showSortBox == true) ...[const TaskSort()],
 
-              //today button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.today),
-                  label: const Text("Today"),
-                ),
-              ),
-
-              //tommorrow button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.turn_right),
-                  label: const Text("Tommorow"),
-                ),
-              ),
-
-              //weekly button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.calendar_view_week),
-                  label: const Text("Weekly"),
-                ),
-              ),
-              //priority view button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const PriorityView();
-                    }));
-                  },
-                  icon: const Icon(Icons.priority_high),
-                  label: const Text("Priority View"),
-                ),
-              ),
-
-              //completed button
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const CompletedTasks();
-                    }));
-                  },
-                  icon: const Icon(Icons.check),
-                  label: const Text("Completed"),
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
-        appBar: AppBar(
-          title: const Text(
-            'To-Do',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.grey[900],
-          elevation: 0,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewTask,
-          splashColor: Colors.black,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50),
-              child: Align(
+              const Align(
                 alignment: Alignment.center,
-                child: Text(
-                  "Hi $userName!",
-                  style: const TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 12, bottom: 15),
+                  child: Text(
+                    "Here are your todos:",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-            const Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Here are your todos:",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
 
-            //builder to display all the todos
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: toDoListObjects.length,
-              itemBuilder: (context, index) {
-                return ToDoList(
-                  taskName: toDoListObjects[index][0],
-                  priority: toDoListObjects[index][1],
-                  taskCompleted: toDoListObjects[index][2],
-                  description: toDoListObjects[index][3],
-                  onChanged: (value) => checkBoxChanged(value, index),
-                  onDel: (context) => delTask(index),
-                );
-              },
-            ),
+              if (showEveryTask == true) ...[
+                //builder to display all the todos
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: toDoListObjects.length,
+                  itemBuilder: (context, index) {
+                    return ToDoList(
+                      taskName: toDoListObjects[index][0],
+                      priority: toDoListObjects[index][1],
+                      taskCompleted: toDoListObjects[index][2],
+                      description: toDoListObjects[index][3],
+                      onChanged: (value) => checkBoxChanged(value, index),
+                      onDel: (context) => delTask(index),
+                    );
+                  },
+                ),
+              ],
 
-            // //displayed message when there are no todos
-            // if (displayTodosCompletedMsg == true) ...[
-            //   const Padding(
-            //     padding: EdgeInsets.only(top: 250),
-            //     child: SizedBox(
-            //       child: Text(
-            //         'All Todos completed!',
-            //         style: TextStyle(color: Colors.white, fontSize: 20),
-            //       ),
-            //     ),
-            //   ),
-            // ]
-            // else ...[
-            //   const Text("")
-            // ],
-          ],
-        ));
+              // //displayed message when there are no todos
+              // if (displayTodosCompletedMsg == true) ...[
+              //   const Padding(
+              //     padding: EdgeInsets.only(top: 250),
+              //     child: SizedBox(
+              //       child: Text(
+              //         'All Todos completed!',
+              //         style: TextStyle(color: Colors.white, fontSize: 20),
+              //       ),
+              //     ),
+              //   ),
+              // ]
+              // else ...[
+              //   const Text("")
+              // ],
+            ],
+          )),
+    );
   }
 }
