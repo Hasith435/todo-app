@@ -3,14 +3,9 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:todo_app/pages/home_page.dart';
 import 'package:todo_app/utils/todo_list_container.dart';
 
-String? selectedValue2;
+String? selectedValuePView;
 
-List sortingListItems = [
-  "All",
-  "High Priority",
-  "Medium priority",
-  "Low priority"
-];
+List sortingListItems = ["All", "High", "Medium", "Low"];
 
 class PriorityView extends StatefulWidget {
   const PriorityView({super.key});
@@ -56,10 +51,10 @@ class _PriorityViewState extends State<PriorityView> {
             child: SizedBox(
               width: 390,
               child: DropdownButtonFormField2(
-                value: selectedValue2,
+                value: selectedValuePView,
                 onChanged: (value) {
                   setState(() {
-                    selectedValue2 = value as String;
+                    selectedValuePView = value as String;
                   });
                 },
                 dropdownDecoration: BoxDecoration(
@@ -90,17 +85,17 @@ class _PriorityViewState extends State<PriorityView> {
           ),
         ),
 
-        //todo containers high priority
-        if (selectedValue2 == "High Priority") ...[
+        //list builder for medium priority tasks
+        if (selectedValuePView == "Medium") ...[
           ListView.builder(
             shrinkWrap: true,
-            itemCount: highPriority.length,
+            itemCount: mediumPriority.length,
             itemBuilder: (context, index) {
               return ToDoList(
-                taskName: toDoListObjects[index][0],
-                priority: toDoListObjects[index][1],
-                taskCompleted: toDoListObjects[index][2],
-                description: toDoListObjects[index][3],
+                taskName: mediumPriority[index][0],
+                priority: mediumPriority[index][1],
+                taskCompleted: mediumPriority[index][2],
+                description: mediumPriority[index][3],
                 onChanged: (value) => checkBoxChanged(value, index),
                 onDel: (context) => delTask(index),
               );
@@ -108,41 +103,41 @@ class _PriorityViewState extends State<PriorityView> {
           ),
         ],
 
-        // //todo containers for medium priority
-        // if (selectedValue2 == "Medium Priority") ...[
-        //   ListView.builder(
-        //     shrinkWrap: true,
-        //     itemCount: mediumPriority.length,
-        //     itemBuilder: (context, index) {
-        //       return ToDoList(
-        //         taskName: toDoListObjects[index][0],
-        //         priority: toDoListObjects[index][1],
-        //         taskCompleted: toDoListObjects[index][2],
-        //         description: toDoListObjects[index][3],
-        //         onChanged: (value) => checkBoxChanged(value, index),
-        //         onDel: (context) => delTask(index),
-        //       );
-        //     },
-        //   ),
-        // ],
+        //list builder for high priority tasks
+        if (selectedValuePView == "High") ...[
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: highPriority.length,
+            itemBuilder: (context, index) {
+              return ToDoList(
+                taskName: highPriority[index][0],
+                priority: highPriority[index][1],
+                taskCompleted: highPriority[index][2],
+                description: highPriority[index][3],
+                onChanged: (value) => checkBoxChanged(value, index),
+                onDel: (context) => delTask(index),
+              );
+            },
+          ),
+        ],
 
-        // //todo containers for low priority
-        // if (selectedValue2 == "Low Priority") ...[
-        //   ListView.builder(
-        //     shrinkWrap: true,
-        //     itemCount: lowPriority.length,
-        //     itemBuilder: (context, index) {
-        //       return ToDoList(
-        //         taskName: toDoListObjects[index][0],
-        //         priority: toDoListObjects[index][1],
-        //         taskCompleted: toDoListObjects[index][2],
-        //         description: toDoListObjects[index][3],
-        //         onChanged: (value) => checkBoxChanged(value, index),
-        //         onDel: (context) => delTask(index),
-        //       );
-        //     },
-        //   ),
-        // ]
+        //list builder for low priority tasks
+        if (selectedValuePView == "Low") ...[
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: lowPriority.length,
+            itemBuilder: (context, index) {
+              return ToDoList(
+                taskName: lowPriority[index][0],
+                priority: lowPriority[index][1],
+                taskCompleted: lowPriority[index][2],
+                description: lowPriority[index][3],
+                onChanged: (value) => checkBoxChanged(value, index),
+                onDel: (context) => delTask(index),
+              );
+            },
+          ),
+        ],
       ]),
     );
   }

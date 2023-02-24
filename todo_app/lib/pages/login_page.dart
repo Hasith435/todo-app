@@ -83,7 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: const BorderSide(color: Colors.white))),
               ),
             ),
-            const SizedBox(height: 10),
+
+            //sized box
+            const SizedBox(
+              height: 10,
+            ),
+            //error message
+            if (showErrorMsg == true)
+              ErrorMsg(errorMsg: 'Field cannot be left Empty'),
+
+            //enter button
             Center(
               child: GestureDetector(
                 onTap: openHomePage,
@@ -103,10 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
-            //error message
-            if (showErrorMsg == true)
-              ErrorMsg(errorMsg: 'Field cannot be left Empty')
           ],
         ),
       ),

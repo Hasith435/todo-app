@@ -12,12 +12,19 @@ class ErrorMsg extends StatefulWidget {
 class _ErrorMsgState extends State<ErrorMsg> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(
-        widget.errorMsg,
-        style: const TextStyle(
-            color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
-      ),
+    return Column(
+      children: [
+        Container(
+          child: Text(
+            widget.errorMsg,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 }
