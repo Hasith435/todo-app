@@ -4,9 +4,8 @@ import 'package:intl/intl.dart';
 
 String? selectedValue;
 bool showDate = false;
-DateTime _dateTime = DateTime(2023);
-String formattedDateTime =
-    "${_dateTime.day} - ${_dateTime.month} - ${_dateTime.year}";
+bool showDateOnAllTodos = false;
+DateTime dateTime = DateTime.now();
 
 class DialogBox extends StatelessWidget {
   final controller;
@@ -28,7 +27,7 @@ class DialogBox extends StatelessWidget {
       builder: (context, setState) => AlertDialog(
         backgroundColor: Colors.grey.shade800,
         content: SizedBox(
-          height: 320,
+          height: 295,
           width: 100,
           child: Column(
             children: [
@@ -53,13 +52,15 @@ class DialogBox extends StatelessWidget {
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: DropdownButtonFormField2(
+                      iconEnabledColor: Colors.white,
+                      iconSize: 25,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade800,
                       ),
-                      dropdownDecoration: const BoxDecoration(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.zero, bottom: Radius.circular(20))),
+                      dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey.shade700),
                       value: selectedValue,
                       onChanged: (value) {
                         setState(() {
@@ -73,7 +74,7 @@ class DialogBox extends StatelessWidget {
                                 child: Text(
                                   item,
                                   style: const TextStyle(
-                                      fontSize: 14, color: Colors.black),
+                                      fontSize: 14, color: Colors.white),
                                 ),
                               ))
                           .toList(),
@@ -101,25 +102,31 @@ class DialogBox extends StatelessWidget {
                 ),
               ),
 
-              if (showDate == true) ...[
-                Text("Selected Date: $formattedDateTime"),
-              ],
+              Text(
+                "Selected Date: ${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
 
               //date picker
               SizedBox(
                 width: 3500,
                 child: ElevatedButton(
                   onPressed: () async {
-                    DateTime? _newDate = await showDatePicker(
+                    final DateTime? newDate = await showDatePicker(
                         context: context,
-                        initialDate: _dateTime,
-                        firstDate: _dateTime,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
                         lastDate: DateTime(3000));
 
-                    if (_newDate != null) {
+                    if (newDate != null && newDate != dateTime) {
                       setState(() {
-                        _dateTime = _newDate;
+                        dateTime = newDate;
                         showDate = true;
+                        showDateOnAllTodos = true;
+                        debugPrint(dateTime.toString());
                       });
                     }
                   },
@@ -133,15 +140,18 @@ class DialogBox extends StatelessWidget {
 
               //save and cancel button
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //save button
-                  ElevatedButton(
-                    onPressed: onSave,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 130, 241, 133)),
-                    child: const Text('Save'),
+                  SizedBox(
+                    width: 110,
+                    child: ElevatedButton(
+                      onPressed: onSave,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 130, 241, 133)),
+                      child: const Text('Save'),
+                    ),
                   ),
 
                   const SizedBox(
@@ -149,15 +159,18 @@ class DialogBox extends StatelessWidget {
                   ),
 
                   //cancel button
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        showDate == false;
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 238, 111, 72)),
-                      child: const Text('Cancel'))
+                  SizedBox(
+                    width: 110,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          showDate == false;
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 238, 111, 72)),
+                        child: const Text('Cancel')),
+                  )
                 ],
               )
             ],

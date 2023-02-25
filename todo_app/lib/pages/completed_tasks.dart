@@ -22,30 +22,33 @@ class _CompletedTasksState extends State<CompletedTasks> {
         ),
         backgroundColor: Colors.grey[900],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 10),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                "These are all your completed todos:",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 10),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "These are all your completed todos:",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
               ),
             ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: completedTodos.length,
-            itemBuilder: (context, index) {
-              return ToDoListCompleted(taskName: completedTodos[index][0]);
-            },
-          ),
-        ],
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: completedTodos.length,
+              itemBuilder: (context, index) {
+                return ToDoListCompleted(taskName: completedTodos[index][0]);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
