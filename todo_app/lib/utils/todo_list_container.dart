@@ -9,6 +9,7 @@ class ToDoList extends StatelessWidget {
   final bool taskCompleted;
   final String priority;
   final String description;
+  final String dueDate;
   Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
 
@@ -18,6 +19,7 @@ class ToDoList extends StatelessWidget {
       required this.taskCompleted,
       required this.priority,
       required this.description,
+      required this.dueDate,
       required this.onDel,
       required this.onChanged});
 
@@ -60,10 +62,12 @@ class ToDoList extends StatelessWidget {
                           fontSize: 20,
                         ),
                       ),
-                      Text(
-                        formattedDateTime,
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      if (showDateOnAllTodos == true) ...[
+                        Text(
+                          dueDate,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
                     ],
                   ),
 
@@ -90,7 +94,7 @@ class ToDoList extends StatelessWidget {
                     return DescriptionDialog(
                       taskName: taskName,
                       priority: priority,
-                      dueDate: formattedDateTime,
+                      dueDate: dueDate,
                       description: description,
                     );
                   });
