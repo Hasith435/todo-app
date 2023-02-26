@@ -119,6 +119,8 @@ class _PriorityViewState extends State<PriorityView> {
                   taskCompleted: mediumPriority[index][2],
                   description: mediumPriority[index][3],
                   dueDate: mediumPriority[index][4].toString(),
+                  unformattedDueDate: toDoListObjects[index][5],
+                  index: index,
                   onChanged: (value) =>
                       checkBoxChanged(value, index, mediumPriority[index][1]),
                   onDel: (context) => delTask(index, mediumPriority[index][1]),
@@ -140,6 +142,8 @@ class _PriorityViewState extends State<PriorityView> {
                   taskCompleted: highPriority[index][2],
                   description: highPriority[index][3],
                   dueDate: highPriority[index][4].toString(),
+                  unformattedDueDate: toDoListObjects[index][5],
+                  index: index,
                   onChanged: (value) =>
                       checkBoxChanged(value, index, highPriority[index][1]),
                   onDel: (context) => delTask(index, highPriority[index][1]),
@@ -161,6 +165,8 @@ class _PriorityViewState extends State<PriorityView> {
                   taskCompleted: lowPriority[index][2],
                   description: lowPriority[index][3],
                   dueDate: lowPriority[index][4].toString(),
+                  unformattedDueDate: toDoListObjects[index][5],
+                  index: index,
                   onChanged: (value) =>
                       checkBoxChanged(value, index, lowPriority[index][1]),
                   onDel: (context) => delTask(index, lowPriority[index][2]),
