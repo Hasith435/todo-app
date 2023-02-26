@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/pages/edit_todo_page.dart';
+import 'package:todo_app/pages/home_page.dart';
+import 'package:todo_app/pages/edit_todo_page.dart';
 import 'package:todo_app/utils/dialog_box.dart';
 import 'package:todo_app/utils/dialog_box_todo_description.dart';
+
+TextEditingController taskTitleController = TextEditingController();
+TextEditingController taskDescriptionController = TextEditingController();
 
 //this is the todolist container for the today page
 class ToDoList extends StatelessWidget {
@@ -10,6 +16,8 @@ class ToDoList extends StatelessWidget {
   final String priority;
   final String description;
   final String dueDate;
+  final int index;
+  final DateTime unformattedDueDate;
   Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
 
@@ -20,6 +28,8 @@ class ToDoList extends StatelessWidget {
       required this.priority,
       required this.description,
       required this.dueDate,
+      required this.index,
+      required this.unformattedDueDate,
       required this.onDel,
       required this.onChanged});
 
@@ -28,6 +38,28 @@ class ToDoList extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: Slidable(
+          startActionPane: ActionPane(
+            motion: const StretchMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return const EditTask();
+                  }));
+
+                  editPageTaskTitleController.text = taskName;
+                  editPageTaskDescriptionController.text = description;
+                  editTodoPrioritySelectedValue = priority;
+                  dateTimeEditPage = unformattedDueDate;
+                  taskIndex = index;
+                },
+                icon: Icons.edit,
+                backgroundColor: Colors.blue.shade400,
+                borderRadius: BorderRadius.circular(12),
+              )
+            ],
+          ),
           endActionPane: ActionPane(
             motion: const StretchMotion(),
             children: [

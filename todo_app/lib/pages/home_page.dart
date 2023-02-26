@@ -142,6 +142,82 @@ class _HomePageState extends State<HomePage> {
             onSave: saveNewTask,
           );
         });
+
+    void saveEditedTask() {
+      setState(() {
+        toDoListObjects.add(
+          [
+            _controller.text,
+            selectedValue,
+            false,
+            taskDescriptionController.text,
+            "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+            dateTime
+          ],
+        );
+
+        //high priority tasks
+        if (selectedValue == "High") {
+          highPriority.add([
+            taskTitleController.text,
+            selectedValue,
+            false,
+            taskDescriptionController.text,
+            "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+            dateTime
+          ]);
+        }
+
+        //Medium priority
+        else if (selectedValue == "Medium") {
+          mediumPriority.add([
+            taskTitleController.text,
+            selectedValue,
+            false,
+            taskDescriptionController.text,
+            "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+            dateTime
+          ]);
+
+          debugPrint('Medium: $mediumPriority');
+        }
+
+        //low priority
+        else if (selectedValue == "Low") {
+          lowPriority.add([
+            taskTitleController.text,
+            selectedValue,
+            false,
+            taskDescriptionController.text,
+            "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+            dateTime
+          ]);
+
+          debugPrint('Medium: $lowPriority');
+        }
+
+        showDate = false;
+      });
+
+      taskTitleController.clear();
+      taskDescriptionController.clear();
+      Navigator.of(context).pop();
+    }
+
+    void editTask(String taskName, String description) {
+      taskTitleController.text = taskName;
+      taskDescriptionController.text = description;
+
+      showDialog(
+          context: context,
+          builder: (context) {
+            return DialogBox(
+              controller: taskTitleController,
+              controlletDescrition: taskDescriptionController,
+              onSave: saveNewTask,
+            );
+          });
+    }
   }
 
   @override
@@ -204,6 +280,8 @@ class _HomePageState extends State<HomePage> {
                 taskCompleted: toDoListObjects[index][2],
                 description: toDoListObjects[index][3],
                 dueDate: toDoListObjects[index][4].toString(),
+                unformattedDueDate: toDoListObjects[index][5],
+                index: index,
                 onChanged: (value) =>
                     checkBoxChanged(value, index, toDoListObjects[index][1]),
                 onDel: (context) => delTask(index, toDoListObjects[index][1]),
