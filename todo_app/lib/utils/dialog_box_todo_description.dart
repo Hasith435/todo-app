@@ -36,27 +36,36 @@ class DescriptionDialog extends StatelessWidget {
                       height: 10,
                     ),
                     //Due date
-                    Text(
-                      'Due Date: $dueDate',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Due Date: $dueDate',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                     //priority
-                    Text(
-                      'Priority: $priority',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Priority: $priority',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                     //description
-                    Text(
-                      'Desciption: $description',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Desciption: $description',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],

@@ -12,6 +12,12 @@ class CompletedTasks extends StatefulWidget {
 
 class _CompletedTasksState extends State<CompletedTasks> {
   @override
+  void initState() {
+    // TODO: implement initState
+    db.loadData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 48, 48, 48),
@@ -31,7 +37,7 @@ class _CompletedTasksState extends State<CompletedTasks> {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "These are all your completed todos:",
+                  "These are all your completed Tasks:",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -42,9 +48,9 @@ class _CompletedTasksState extends State<CompletedTasks> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: completedTodos.length,
+              itemCount: db.completedTodos.length,
               itemBuilder: (context, index) {
-                return ToDoListCompleted(taskName: completedTodos[index][0]);
+                return ToDoListCompleted(taskName: db.completedTodos[index][0]);
               },
             ),
           ],
