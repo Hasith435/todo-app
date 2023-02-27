@@ -17,6 +17,8 @@ class ToDoList extends StatelessWidget {
   final String description;
   final String dueDate;
   final int index;
+  bool showDueDateWarningTomorrow;
+  bool showDueDateWarningToday;
   final DateTime unformattedDueDate;
   Function(BuildContext)? onDel;
   Function(bool?)? onChanged;
@@ -31,12 +33,14 @@ class ToDoList extends StatelessWidget {
       required this.index,
       required this.unformattedDueDate,
       required this.onDel,
+      required this.showDueDateWarningTomorrow,
+      required this.showDueDateWarningToday,
       required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
         child: Slidable(
           startActionPane: ActionPane(
             motion: const StretchMotion(),
@@ -94,12 +98,29 @@ class ToDoList extends StatelessWidget {
                           fontSize: 20,
                         ),
                       ),
-                      if (showDateOnAllTodos == true) ...[
+                      Row(children: [
                         Text(
-                          dueDate,
+                          "Due on: $dueDate",
                           style: const TextStyle(color: Colors.white),
                         ),
-                      ],
+                        if (showDueDateWarningTomorrow == true) ...[
+                          const Text(
+                            "DUE TOMORROW",
+                            style: TextStyle(
+                                color: Colors.yellow,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ] else if (showDueDateWarningToday == true) ...[
+                          const Text(
+                            "DUE TODAY",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ])
                     ],
                   ),
 
@@ -108,7 +129,7 @@ class ToDoList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0),
                     child: Text(
-                      "Priority: $priority",
+                      "Importance: $priority",
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                         color: Colors.white,
@@ -147,16 +168,17 @@ class ToDoListCompleted extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Container(
+        height: 60,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16), color: Colors.grey[600]),
+            borderRadius: BorderRadius.circular(12), color: Colors.grey[700]),
         child: Row(
           children: [
             Text(
               taskName,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 20,
               ),
             ),
           ],

@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app/data/database.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/pages/priority_view.dart';
 import 'package:todo_app/utils/drawer.dart';
@@ -10,16 +12,12 @@ import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/dialog_box.dart';
 import 'package:todo_app/pages/login_page.dart';
 
-List completedTodos = [];
 bool taskCheck = true;
-List toDoListObjects = [];
 
-List highPriority = [];
-List mediumPriority = [];
-List lowPriority = [];
+ToDoDateBase db = ToDoDateBase();
 
-List todayTasks = [];
-List tommorowTasks = [];
+bool showDueDateWarningTomorrow = false;
+bool showDueDateWarningToday = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,38 +27,79 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final myBox = Hive.box('myBox');
+
+  @override
+  void initState() {
+    db.loadData();
+  }
+
   final _controller = TextEditingController();
   final _controllerDescription = TextEditingController();
 
   bool displayTodosCompletedMsg = false;
 
-  void checkBoxChanged(bool? value, index, priority) {
-    setState(() {
-      toDoListObjects[index][2] = !toDoListObjects[index][2];
+  void checkBoxChanged(bool? value, index, priority) async {
+    int iHigh = 0;
+    int iLow = 0;
+    var elementIndexToRemoveHigh;
+    var elementIndexToRemoveLow;
 
-      //adding the completed task into completed tasks list
-      completedTodos.add(toDoListObjects[index]);
-      toDoListObjects.removeAt(index);
+    setState(() {
+      // adding the completed task into completed tasks list
+      db.completedTodos.add(db.toDoListObjects[index]);
+      db.toDoListObjects[index][2] = !db.toDoListObjects[index][2];
+
       debugPrint(priority.toString());
       if (priority == "High") {
-        highPriority.removeAt(index);
-      } else if (priority == "Medium") {
-        mediumPriority.removeAt(index);
+        debugPrint(db.toDoListObjects[index].toString());
+
+        for (var elements in db.highPriority) {
+          for (var innerElements in elements) {
+            for (var referenceElements in db.toDoListObjects[index]) {
+              if (referenceElements == innerElements) {
+                iHigh += 1;
+                if (iHigh == 5) {
+                  elementIndexToRemoveHigh = db.highPriority.indexOf(elements);
+                }
+              }
+            }
+          }
+        }
+
+        db.highPriority.removeAt(elementIndexToRemoveHigh);
+
+        db.toDoListObjects.removeAt(index);
+        debugPrint(db.highPriority.toString());
       } else if (priority == "Low") {
-        lowPriority.removeAt(index);
+        debugPrint(db.toDoListObjects[index].toString());
+
+        for (var elements in db.lowPriority) {
+          for (var innerElements in elements) {
+            for (var referenceElements in db.toDoListObjects[index]) {
+              if (referenceElements == innerElements) {
+                iLow += 1;
+                if (iLow == 5) {
+                  elementIndexToRemoveLow = db.lowPriority.indexOf(elements);
+                }
+              }
+            }
+          }
+        }
+
+        db.lowPriority.removeAt(elementIndexToRemoveLow);
+
+        db.toDoListObjects.removeAt(index);
+        debugPrint(db.lowPriority.toString());
       }
     });
-  }
 
-  void checkTodosCompleted() {
-    if (toDoListObjects.isEmpty) {
-      displayTodosCompletedMsg = true;
-    }
+    db.updateDateBase();
   }
 
   void saveNewTask() {
     setState(() {
-      toDoListObjects.add(
+      db.toDoListObjects.add(
         [
           _controller.text,
           selectedValue,
@@ -73,7 +112,7 @@ class _HomePageState extends State<HomePage> {
 
       //high priority tasks
       if (selectedValue == "High") {
-        highPriority.add([
+        db.highPriority.add([
           _controller.text,
           selectedValue,
           false,
@@ -81,25 +120,11 @@ class _HomePageState extends State<HomePage> {
           "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
           dateTime
         ]);
-      }
-
-      //Medium priority
-      else if (selectedValue == "Medium") {
-        mediumPriority.add([
-          _controller.text,
-          selectedValue,
-          false,
-          _controllerDescription.text,
-          "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
-          dateTime
-        ]);
-
-        debugPrint('Medium: $mediumPriority');
       }
 
       //low priority
       else if (selectedValue == "Low") {
-        lowPriority.add([
+        db.lowPriority.add([
           _controller.text,
           selectedValue,
           false,
@@ -108,7 +133,7 @@ class _HomePageState extends State<HomePage> {
           dateTime
         ]);
 
-        debugPrint('Medium: $lowPriority');
+        debugPrint('Medium: $db.lowPriority');
       }
 
       showDate = false;
@@ -117,19 +142,19 @@ class _HomePageState extends State<HomePage> {
     _controller.clear();
     _controllerDescription.clear();
     Navigator.of(context).pop();
+    db.updateDateBase();
   }
 
   void delTask(int index, priority) {
     setState(() {
-      toDoListObjects.removeAt(index);
       if (priority == "High") {
-        highPriority.removeAt(index);
-      } else if (priority == "Medium") {
-        mediumPriority.removeAt(index);
+        db.highPriority.remove(db.toDoListObjects[index]);
       } else if (priority == "Low") {
-        lowPriority.removeAt(index);
+        db.lowPriority.remove(db.toDoListObjects[index]);
       }
+      db.toDoListObjects.removeAt(index);
     });
+    db.updateDateBase();
   }
 
   void createNewTask() {
@@ -145,20 +170,20 @@ class _HomePageState extends State<HomePage> {
 
     void saveEditedTask() {
       setState(() {
-        toDoListObjects.add(
+        db.toDoListObjects.add(
           [
             _controller.text,
             selectedValue,
             false,
             taskDescriptionController.text,
             "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
-            dateTime
+            dateTime,
           ],
         );
 
         //high priority tasks
         if (selectedValue == "High") {
-          highPriority.add([
+          db.highPriority.add([
             taskTitleController.text,
             selectedValue,
             false,
@@ -166,25 +191,11 @@ class _HomePageState extends State<HomePage> {
             "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
             dateTime
           ]);
-        }
-
-        //Medium priority
-        else if (selectedValue == "Medium") {
-          mediumPriority.add([
-            taskTitleController.text,
-            selectedValue,
-            false,
-            taskDescriptionController.text,
-            "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
-            dateTime
-          ]);
-
-          debugPrint('Medium: $mediumPriority');
         }
 
         //low priority
         else if (selectedValue == "Low") {
-          lowPriority.add([
+          db.lowPriority.add([
             taskTitleController.text,
             selectedValue,
             false,
@@ -193,30 +204,16 @@ class _HomePageState extends State<HomePage> {
             dateTime
           ]);
 
-          debugPrint('Medium: $lowPriority');
+          debugPrint('Medium: $db.lowPriority');
         }
 
         showDate = false;
       });
+      db.updateDateBase();
 
       taskTitleController.clear();
       taskDescriptionController.clear();
       Navigator.of(context).pop();
-    }
-
-    void editTask(String taskName, String description) {
-      taskTitleController.text = taskName;
-      taskDescriptionController.text = description;
-
-      showDialog(
-          context: context,
-          builder: (context) {
-            return DialogBox(
-              controller: taskTitleController,
-              controlletDescrition: taskDescriptionController,
-              onSave: saveNewTask,
-            );
-          });
     }
   }
 
@@ -227,19 +224,34 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       appBar: AppBar(
         title: const Text(
-          'To-Do',
+          'All Tasks',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[900],
         elevation: 0,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: createNewTask,
-        splashColor: Colors.black,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
+      floatingActionButton: SizedBox(
+        width: 100,
+        child: FloatingActionButton(
+            isExtended: true,
+            backgroundColor: Colors.grey.shade800,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            onPressed: createNewTask,
+            splashColor: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Add Task',
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            )),
       ),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -248,7 +260,7 @@ class _HomePageState extends State<HomePage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                "Hi $userName!",
+                "Hi ${db.userName}!",
                 style: const TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -256,14 +268,73 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
           const Align(
             alignment: Alignment.center,
             child: Text(
-              "Here are your todos:",
+              "Here are your tasks:",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(13),
+                      color: Colors.grey[800]),
+                  width: 180,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Tasks Left:",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        db.toDoListObjects.length.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(13),
+                      color: Colors.grey[800]),
+                  width: 180,
+                  child: Column(
+                    children: [
+                      const Text('Important tasks:',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
+                      Text(
+                        db.highPriority.length.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -272,19 +343,22 @@ class _HomePageState extends State<HomePage> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: toDoListObjects.length,
+            itemCount: db.toDoListObjects.length,
             itemBuilder: (context, index) {
               return ToDoList(
-                taskName: toDoListObjects[index][0],
-                priority: toDoListObjects[index][1],
-                taskCompleted: toDoListObjects[index][2],
-                description: toDoListObjects[index][3],
-                dueDate: toDoListObjects[index][4].toString(),
-                unformattedDueDate: toDoListObjects[index][5],
+                taskName: db.toDoListObjects[index][0],
+                priority: db.toDoListObjects[index][1],
+                taskCompleted: db.toDoListObjects[index][2],
+                description: db.toDoListObjects[index][3],
+                dueDate: db.toDoListObjects[index][4].toString(),
+                unformattedDueDate: db.toDoListObjects[index][5],
+                showDueDateWarningToday: showDueDateWarningToday,
+                showDueDateWarningTomorrow: showDueDateWarningTomorrow,
                 index: index,
                 onChanged: (value) =>
-                    checkBoxChanged(value, index, toDoListObjects[index][1]),
-                onDel: (context) => delTask(index, toDoListObjects[index][1]),
+                    checkBoxChanged(value, index, db.toDoListObjects[index][1]),
+                onDel: (context) =>
+                    delTask(index, db.toDoListObjects[index][1]),
               );
             },
           ),
