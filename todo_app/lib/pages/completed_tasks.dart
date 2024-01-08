@@ -32,19 +32,6 @@ class _CompletedTasksState extends State<CompletedTasks> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 10),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "These are all your completed Tasks:",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ),
-            ),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

@@ -64,63 +64,15 @@ class _AppDrawerState extends State<AppDrawer> {
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return const HomePage();
+                    return const LoginPage();
                   }));
                 },
                 icon: const Icon(
-                  Icons.arrow_downward_rounded,
-                  color: Colors.yellow,
+                  Icons.logout,
+                  color: Colors.white,
                 ),
                 label: const Text(
-                  "All Tasks",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-
-            //priority view button
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade700),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return const PriorityView();
-                  }));
-                },
-                icon: const Icon(
-                  Icons.priority_high,
-                  color: Colors.red,
-                ),
-                label: const Text(
-                  "Important tasks",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-
-            //completed button
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade700),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return const CompletedTasks();
-                  }));
-                },
-                icon: const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                ),
-                label: const Text(
-                  "Completed",
+                  "Log Out",
                   style: TextStyle(color: Colors.white),
                 ),
               ),

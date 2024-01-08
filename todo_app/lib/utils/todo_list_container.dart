@@ -95,13 +95,14 @@ class ToDoList extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 25,
                         ),
                       ),
                       Row(children: [
                         Text(
                           "Due on: $dueDate",
-                          style: const TextStyle(color: Colors.white),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 17),
                         ),
                         if (showDueDateWarningTomorrow == true) ...[
                           const Text(
@@ -132,9 +133,9 @@ class ToDoList extends StatelessWidget {
                       "Importance: $priority",
                       textAlign: TextAlign.right,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                          color: Colors.grey,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
