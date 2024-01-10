@@ -11,8 +11,14 @@ import 'package:todo_app/utils/todo_list_container.dart';
 import 'package:todo_app/pages/completed_tasks.dart';
 import 'package:todo_app/utils/dialog_box.dart';
 import 'package:todo_app/pages/login_page.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 
 bool taskCheck = true;
+
+int _currentIndex = 0;
 
 ToDoDateBase db = ToDoDateBase();
 
@@ -36,6 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   final _controller = TextEditingController();
   final _controllerDescription = TextEditingController();
+
+  int _selectedIndex = 0;
 
   bool displayTodosCompletedMsg = false;
 
@@ -217,13 +225,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void tabToTasks(int index) {
+    if (index == 0) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return const HomePage();
+          },
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const AppDrawer(),
       backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       appBar: AppBar(
-        title: const Text(
+        title: const AutoSizeText(
           'All Tasks',
           style: TextStyle(color: Colors.white),
         ),
@@ -232,26 +252,29 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: SizedBox(
         width: 100,
-        child: FloatingActionButton(
-            isExtended: true,
-            backgroundColor: Colors.grey.shade800,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            onPressed: createNewTask,
-            splashColor: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                Text(
-                  'Add Task',
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            )),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 25.0),
+          child: FloatingActionButton(
+              isExtended: true,
+              backgroundColor: Colors.grey.shade800,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              onPressed: createNewTask,
+              splashColor: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  AutoSizeText(
+                    'Add Task',
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              )),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -259,7 +282,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 50),
             child: Align(
               alignment: Alignment.center,
-              child: Text(
+              child: AutoSizeText(
                 "Hi ${db.userName}!",
                 style: const TextStyle(
                     fontSize: 40,
@@ -271,12 +294,15 @@ class _HomePageState extends State<HomePage> {
 
           const Align(
             alignment: Alignment.center,
-            child: Text(
-              "Here are your tasks:",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+            child: Padding(
+              padding: EdgeInsets.only(top: 15.0),
+              child: AutoSizeText(
+                "Here are your tasks:",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
             ),
           ),
 
@@ -285,50 +311,53 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13),
-                      color: Colors.grey[800]),
-                  width: 180,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Tasks Left:",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        db.toDoListObjects.length.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(13),
+                        color: Colors.grey[800]),
+                    width: 180,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const AutoSizeText(
+                          "Tasks Left:",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
-                      )
-                    ],
+                        Text(
+                          db.toDoListObjects.length.toString(),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 17,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
                       color: Colors.grey[800]),
                   width: 180,
                   child: Column(
                     children: [
-                      const Text('Important tasks:',
+                      const Text('Important Tasks:',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 17,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold)),
                       Text(
                         db.highPriority.length.toString(),
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
+                          color: Colors.grey,
+                          fontSize: 17,
                         ),
                       )
                     ],
@@ -347,7 +376,8 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index) {
               return ToDoList(
                 taskName: db.toDoListObjects[index][0],
-                priority: db.toDoListObjects[index][1],
+                priority: "High",
+                // priority: db.toDoListObjects[index][1],
                 taskCompleted: db.toDoListObjects[index][2],
                 description: db.toDoListObjects[index][3],
                 dueDate: db.toDoListObjects[index][4].toString(),
@@ -364,22 +394,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ]),
       ),
-
-      // //displayed message when there are no todos
-      // if (displayTodosCompletedMsg == true) ...[
-      //   const Padding(
-      //     padding: EdgeInsets.only(top: 250),
-      //     child: SizedBox(
-      //       child: Text(
-      //         'All Todos completed!',
-      //         style: TextStyle(color: Colors.white, fontSize: 20),
-      //       ),
-      //     ),
-      //   ),
-      // ]
-      // else ...[
-      //   const Text("")
-      // ],
     );
   }
 }

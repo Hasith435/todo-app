@@ -55,6 +55,10 @@ class _EditTaskState extends State<EditTask> {
     debugPrint('edited tasks: ${db.editedTasks.toString()}');
     db.toDoListObjects[taskIndex] = db.editedTasks[0];
 
+    if (editTodoPrioritySelectedValue == "High") {
+      db.highPriority[taskIndex] = db.editedTasks[0];
+    }
+
     db.editedTasks.clear();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
