@@ -4,6 +4,7 @@ import 'package:todo_app/utils/drawer.dart';
 import 'package:todo_app/pages/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/data/database.dart';
+import 'package:todo_app/pages/bottom_nav_bar.dart';
 
 TextEditingController editPageTaskTitleController = TextEditingController();
 
@@ -62,7 +63,7 @@ class _EditTaskState extends State<EditTask> {
     db.editedTasks.clear();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-      return const HomePage();
+      return const NavBar();
     }));
     showDate == false;
 
