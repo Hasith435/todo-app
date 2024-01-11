@@ -76,8 +76,8 @@ class _HomePageState extends State<HomePage> {
         }
 
         db.highPriority.removeAt(elementIndexToRemoveHigh);
-
         db.toDoListObjects.removeAt(index);
+
         debugPrint(db.highPriority.toString());
       } else if (priority == "Low") {
         debugPrint(db.toDoListObjects[index].toString());
@@ -96,8 +96,8 @@ class _HomePageState extends State<HomePage> {
         }
 
         db.lowPriority.removeAt(elementIndexToRemoveLow);
-
         db.toDoListObjects.removeAt(index);
+
         debugPrint(db.lowPriority.toString());
       }
     });
@@ -105,12 +105,13 @@ class _HomePageState extends State<HomePage> {
     db.updateDateBase();
   }
 
-  void saveNewTask() {
+//Register the new task into the datbase
+  void regTask() {
     setState(() {
       db.toDoListObjects.add(
         [
           _controller.text,
-          selectedValue,
+          priority,
           false,
           _controllerDescription.text,
           "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -119,10 +120,10 @@ class _HomePageState extends State<HomePage> {
       );
 
       //high priority tasks
-      if (selectedValue == "High") {
+      if (priority == "High") {
         db.highPriority.add([
           _controller.text,
-          selectedValue,
+          priority,
           false,
           _controllerDescription.text,
           "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -131,10 +132,10 @@ class _HomePageState extends State<HomePage> {
       }
 
       //low priority
-      else if (selectedValue == "Low") {
+      else if (priority == "Low") {
         db.lowPriority.add([
           _controller.text,
-          selectedValue,
+          priority,
           false,
           _controllerDescription.text,
           "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -165,14 +166,14 @@ class _HomePageState extends State<HomePage> {
     db.updateDateBase();
   }
 
-  void createNewTask() {
+  void displayNewTask() {
     showDialog(
         context: context,
         builder: (context) {
           return DialogBox(
             controller: _controller,
             controlletDescrition: _controllerDescription,
-            onSave: saveNewTask,
+            onSave: regTask,
           );
         });
 
@@ -181,7 +182,7 @@ class _HomePageState extends State<HomePage> {
         db.toDoListObjects.add(
           [
             _controller.text,
-            selectedValue,
+            priority,
             false,
             taskDescriptionController.text,
             "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -190,10 +191,10 @@ class _HomePageState extends State<HomePage> {
         );
 
         //high priority tasks
-        if (selectedValue == "High") {
+        if (priority == "High") {
           db.highPriority.add([
             taskTitleController.text,
-            selectedValue,
+            priority,
             false,
             taskDescriptionController.text,
             "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -202,10 +203,10 @@ class _HomePageState extends State<HomePage> {
         }
 
         //low priority
-        else if (selectedValue == "Low") {
+        else if (priority == "Low") {
           db.lowPriority.add([
             taskTitleController.text,
-            selectedValue,
+            priority,
             false,
             taskDescriptionController.text,
             "${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
@@ -259,7 +260,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.grey.shade800,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              onPressed: createNewTask,
+              onPressed: displayNewTask,
               splashColor: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -376,8 +377,7 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index) {
               return ToDoList(
                 taskName: db.toDoListObjects[index][0],
-                priority: "High",
-                // priority: db.toDoListObjects[index][1],
+                priority: db.toDoListObjects[index][1],
                 taskCompleted: db.toDoListObjects[index][2],
                 description: db.toDoListObjects[index][3],
                 dueDate: db.toDoListObjects[index][4].toString(),

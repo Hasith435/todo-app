@@ -1,18 +1,18 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 
-String? selectedValue;
+String? priority = "High";
+int priorityIndex = 0;
 bool showDate = false;
 bool showDateOnAllTodos = false;
 DateTime dateTime = DateTime.now();
 
-class DialogBox extends StatelessWidget {
+class DialogBox extends StatefulWidget {
   final controller;
   final controlletDescrition;
   VoidCallback onSave;
-
-  List priorities = ["High", "Low"];
 
   DialogBox({
     super.key,
@@ -20,6 +20,15 @@ class DialogBox extends StatelessWidget {
     required this.controlletDescrition,
     required this.onSave,
   });
+
+  @override
+  State<DialogBox> createState() => _DialogBoxState();
+}
+
+class _DialogBoxState extends State<DialogBox> {
+  List priorities = ["High", "Low"];
+
+  final priorityItems = ["High", "Medium", "Low"];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,7 @@ class DialogBox extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 0),
                       child: TextFormField(
                         cursorColor: Colors.white,
-                        controller: controller,
+                        controller: widget.controller,
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 35,
@@ -63,7 +72,7 @@ class DialogBox extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: TextFormField(
                       style: const TextStyle(color: Colors.white, fontSize: 25),
-                      controller: controlletDescrition,
+                      controller: widget.controlletDescrition,
                       decoration: InputDecoration(
                         hintText: "Description",
                         prefix: const Padding(
@@ -78,7 +87,7 @@ class DialogBox extends StatelessWidget {
                     ),
                   ),
 
-                  //priority picker
+                  // //priority picker
                   // Padding(
                   //   padding: const EdgeInsets.only(bottom: 8),
                   //   child: Align(
@@ -124,7 +133,27 @@ class DialogBox extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) => SizedBox(
+                            width: double.infinity,
+                            height: 250,
+                            child: CupertinoPicker(
+                              backgroundColor: Colors.grey.shade800,
+                              itemExtent: 40,
+                              scrollController: FixedExtentScrollController(
+                                  initialItem: priorityIndex),
+                              children: priorityItems
+                                  .map((item) => Text(item))
+                                  .toList(),
+                              onSelectedItemChanged: (index) {
+                                setState(() {
+                                  priority = priorityItems[index];
+                                });
+                              },
+                            ),
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
@@ -140,55 +169,66 @@ class DialogBox extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      // Text(
-                      //   "Selected Date: ${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
-                      //   style: const TextStyle(
-                      //       color: Colors.white,
-                      //       fontWeight: FontWeight.bold,
-                      //       fontSize: 15),
-                      // ),
-
-                      //date picker
                       ElevatedButton(
-                        onPressed: () async {
-                          final DateTime? newDate = await showDatePicker(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade700,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20))),
+                          onPressed: () {
+                            showCupertinoModalPopup(
                               context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(3000));
-
-                          if (newDate != null && newDate != dateTime) {
-                            setState(() {
-                              dateTime = newDate;
-                              showDate = true;
-                              showDateOnAllTodos = true;
-                              debugPrint(dateTime.toString());
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade700,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20))),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.calendar_month_outlined),
-                            Text(
-                              'Date',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
+                              builder: (BuildContext context) => SizedBox(
+                                height: 250,
+                                child: CupertinoDatePicker(
+                                  backgroundColor: Colors.grey.shade800,
+                                  initialDateTime: dateTime,
+                                  onDateTimeChanged: (DateTime newDate) {
+                                    if (newDate != dateTime) {
+                                      setState(() {
+                                        dateTime = newDate;
+                                        showDate = true;
+                                        showDateOnAllTodos = true;
+                                        debugPrint(dateTime.toString());
+                                      });
+                                    }
+                                  },
+                                  use24hFormat: true,
+                                  mode: CupertinoDatePickerMode.date,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(Icons.calendar_month_outlined),
+                              Text(
+                                "Date",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )),
                       ElevatedButton(
-                        onPressed: onSave,
+                        onPressed: widget.onSave,
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey.shade900),
                         child: const Icon(Icons.send),
                       ),
                     ],
+                  ),
+                  Text(
+                    "Selected priority: $priority",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                  Text(
+                    "Selected Date: ${dateTime.day} - ${dateTime.month} - ${dateTime.year}",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
                   ),
                 ],
               ),
